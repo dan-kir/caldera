@@ -35,6 +35,9 @@ data/backup/*
 .tox/
 node_modules/
 
+!proxy/caldera_ssl.crt
+!conf/local.yml
+
 # coverage reports
 htmlcov/
 .coverage

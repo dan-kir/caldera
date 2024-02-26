@@ -49,3 +49,6 @@
 [submodule "plugins/magma"]
 	path = plugins/magma
 	url = https://github.com/mitre/magma.git
+[submodule "plugins/challenges"]
+	path = plugins/challenges
+	url = http://github.com/dan-kir/challenges-caldera-plugin
