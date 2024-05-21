@@ -27,7 +27,9 @@ services:
     mem_limit: 4294967296 # 4 GiB
     volumes:
       - ./:/usr/src/app
-    command: --log DEBUG
+    command: --insecure
+    ports:
+      - 8888:8888
     networks:
       red_net:
         ipv4_address: 172.42.0.10

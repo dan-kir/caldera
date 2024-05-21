@@ -1,4 +1,4 @@
-FROM ubuntu:23.04
+FROM ubuntu:23.10
 SHELL ["/bin/bash", "-c"]
 
 ARG TZ="UTC"
@@ -14,9 +14,22 @@ RUN if [ -z "$(ls plugins/stockpile)" ]; then echo "stockpile plugin not downloa
 RUN apt-get update && \
     apt-get -y install python3 python3-pip python3-venv git curl golang-go
 
+# Install Node.js, npm, and other build VueJS front-end
+RUN apt-get update && \
+    apt-get install -y nodejs npm && \
+    # Directly use npm to install dependencies and build the application
+    (cd plugins/magma && npm install) && \
+    (cd plugins/magma && npm run build) && \
+    # Remove Node.js, npm, and other unnecessary packages
+    apt-get remove -y nodejs npm && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+WORKDIR /usr/src/app
 
 #WIN_BUILD is used to enable windows build in sandcat plugin
-ARG WIN_BUILD=false
+ENV WIN_BUILD=false
 RUN if [ "$WIN_BUILD" = "true" ] ; then apt-get -y install mingw-w64; fi
 
 # Set up python virtualenv
@@ -28,7 +41,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Set up config file and disable atomic by default
-RUN python3 -c "import app; import app.utility.config_generator; app.utility.config_generator.ensure_local_config();";
+#RUN python3 -c "import app; import app.utility.config_generator; app.utility.config_generator.ensure_local_config();";
 
 # Compile default sandcat agent binaries, which will download basic golang dependencies.
 
