@@ -4,6 +4,23 @@
 [![codecov](https://codecov.io/gh/mitre/caldera/branch/master/graph/badge.svg)](https://codecov.io/gh/mitre/caldera)
 [![Documentation Status](https://readthedocs.org/projects/caldera/badge/?version=stable)](http://caldera.readthedocs.io/?badge=stable)
 
+# CHALLENGES Caldera
+
+* SSL proxy container with basic auth (red:caldera)
+* Sandcat agent container
+* Containers running on Docker network "red_net"
+* Limited the number of exposed ports
+* Challenges Plugin enabled (private repo)
+* Atomic Plugin enabled
+
+#### Quick start:
+```Bash
+## Start Caldera server and proxy
+docker compose -f docker-compose-server.yml up -d
+
+## Start Sandcat agent/s
+docker compose -f docker-compose-agents.yml up -d
+
 # MITRE Caldera&trade;
 
 MITRE Caldera&trade; is a cyber security platform designed to easily automate adversary emulation, assist manual red-teams, and automate incident response.

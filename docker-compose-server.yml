@@ -1,0 +1,52 @@
+networks:
+  red_net:
+    name: red_net
+    driver: bridge
+    driver_opts:
+        com.docker.network.bridge.name: br_red_net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.42.0.0/24
+          ip_range: 172.42.0.0/24
+          gateway: 172.42.0.254
+
+services:
+  caldera:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TZ: "UTC"
+        WIN_BUILD: "true"
+    image: caldera:latest
+    container_name: caldera
+    hostname: caldera
+    mem_limit: 4294967296 # 4 GiB
+    volumes:
+      - ./:/usr/src/app
+    command: --insecure --build
+    ports:
+      - 8888:8888
+    networks:
+      red_net:
+        ipv4_address: 172.42.0.10
+
+  caldera-proxy:
+    image: nginx:stable-alpine
+    container_name: caldera-proxy
+    hostname: caldera-proxy
+    mem_limit: 536870912 # 500 MiB
+    environment:
+      - NGINX_ENVSUBST_TEMPLATE_SUFFIX=.conf
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+    volumes:
+      - ${PWD}/proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${PWD}/proxy/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ${PWD}/proxy/caldera_ssl.crt:/etc/ssl/certs/caldera_ssl.crt:ro
+      - ${PWD}/proxy/caldera_ssl.key:/etc/ssl/certs/caldera_ssl.key:ro
+    ports:
+      - 8443:8443
+    networks:
+      red_net:
+        ipv4_address: 172.42.0.12

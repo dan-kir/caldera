@@ -34,6 +34,8 @@ data/backup/*
 !data/backup/.gitkeep
 .tox/
 node_modules/
+!proxy/caldera_ssl.crt
+!conf/local.yml
 
 # coverage reports
 htmlcov/

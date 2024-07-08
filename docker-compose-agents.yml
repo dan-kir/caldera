@@ -1,0 +1,34 @@
+networks:
+  red_net:
+    name: red_net
+    external: true
+  #webapp_net:
+  #  name: webapp_net
+  #  external: true
+
+services:
+  sandcat1:
+    build:
+      context: .
+      dockerfile: Sandcat.Dockerfile
+    image: sandcat:latest
+    container_name: sandcat1
+    hostname: sandcat1
+    mem_limit: 4294967296 # 4 GiB
+    command: -server https://caldera-proxy:443/ -group red1 -v
+    networks:
+      red_net:
+      #webapp_net:
+
+#  sandcat2:
+#    build:
+#      context: .
+#      dockerfile: Sandcat.Dockerfile
+#    image: sandcat:latest
+#    container_name: sandcat2
+#    hostname: sandcat2
+#    mem_limit: 4294967296 # 4 GiB
+#    command: -server https://caldera-proxy:443/ -group red2 -v
+#    networks:
+#      red_net:
+#      webapp_net:
