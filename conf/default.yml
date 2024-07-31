@@ -34,6 +34,7 @@ host: 0.0.0.0
 plugins:
 - access
 - atomic
+- challenges
 - compass
 - debrief
 - fieldmanual
